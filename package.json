@@ -1,0 +1,17 @@
+{
+  "name": "adstream-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:admin": "npm run dev -w @adstream/admin-app",
+    "dev:api": "npm run dev -w @adstream/api-server",
+    "build": "npm run build -w @adstream/player-sdk && npm run build -w @adstream/api-server && npm run build -w @adstream/admin-app",
+    "prisma:generate": "npm run prisma:generate -w @adstream/api-server",
+    "prisma:migrate": "npm run prisma:migrate -w @adstream/api-server",
+    "prisma:seed": "npm run prisma:seed -w @adstream/api-server"
+  }
+}

@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  sites        Site[]
+}
+
+model Site {
+  id                              String       @id @default(cuid())
+  userId                          String
+  name                            String
+  domain                          String
+  description                     String?
+  publicSiteId                    String       @unique
+  revenueSharePercentForPublisher Int
+  adstreamFeePercent              Int
+  createdAt                       DateTime     @default(now())
+  user                            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impressions                     Impression[]
+  clicks                          Click[]
+}
+
+model Ad {
+  id         String   @id @default(cuid())
+  title      String
+  imageUrl   String
+  clickUrl   String
+  isActive   Boolean  @default(true)
+  startAt    DateTime
+  endAt      DateTime
+  targetType String   @default("all")
+  createdAt  DateTime @default(now())
+  impressions Impression[]
+  clicks      Click[]
+}
+
+model Impression {
+  id          String   @id @default(cuid())
+  siteId      String
+  adId        String
+  sessionId   String
+  videoId     String?
+  currentTime Float?
+  createdAt   DateTime @default(now())
+  site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  ad          Ad       @relation(fields: [adId], references: [id], onDelete: Cascade)
+}
+
+model Click {
+  id          String   @id @default(cuid())
+  siteId      String
+  adId        String
+  sessionId   String
+  videoId     String?
+  currentTime Float?
+  createdAt   DateTime @default(now())
+  site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  ad          Ad       @relation(fields: [adId], references: [id], onDelete: Cascade)
+}
